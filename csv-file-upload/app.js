@@ -1,6 +1,9 @@
+let loadedRowsCount = 1;
+
 const parentTable = document.querySelector("#table-info");
 const loadCSVInput = document.querySelector("#load-csv");
 const searchInput = document.querySelector("#table-search");
+const tableContainer = document.querySelector(".table__container");
 
 /*
 [
@@ -10,6 +13,7 @@ const searchInput = document.querySelector("#table-search");
 
 let tableData = {};
 let headers = [];
+// this will be in multiple of 20
 
 function renderHeaders(headers) {
   const tableHeader = document.createElement("thead");
@@ -33,8 +37,9 @@ function populateTableData(tableData, renderHeaders = true) {
   }
 
   const tableBody = document.createElement("tbody");
-  rowItems.forEach((row) => {
+  rowItems.forEach((row, index) => {
     const tableRow = document.createElement("tr");
+    tableRow.dataset.rowNumber = index + 1;
     tableData[row].forEach((col) => {
       const tableCol = document.createElement("td");
       tableCol.innerText = col;
@@ -87,4 +92,33 @@ loadCSVInput.addEventListener("change", (e) => {
 searchInput.addEventListener("input", (e) => {
   const searchQuery = e.target.value;
   searchInTable(searchQuery);
+});
+
+tableContainer.addEventListener("scroll", () => {
+  const rowInMultipleOf20 = parentTable.querySelector(
+    `[data-row-number="${loadedRowsCount * 20}"]`
+  );
+  const rowObserver = new IntersectionObserver(
+    (entries, observer) => {
+      observer.unobserve(rowInMultipleOf20);
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          console.log(entry.target);
+          loadedRowsCount += 1;
+          const nextRowInMultipleOf20 = parentTable.querySelector(
+            `[data-row-number="${loadedRowsCount * 20}"]`
+          );
+          observer.observe(nextRowInMultipleOf20);
+        }
+      });
+    },
+    {
+      root: tableContainer,
+      rootMargin: "0px",
+      threshold: 0.1,
+    }
+  );
+  if (rowInMultipleOf20 && loadedRowsCount === 1) {
+    rowObserver.observe(rowInMultipleOf20);
+  }
 });
