@@ -13,7 +13,6 @@ const tableContainer = document.querySelector(".table__container");
 
 let tableData = {};
 let headers = [];
-// this will be in multiple of 20
 
 function renderHeaders(headers) {
   const tableHeader = document.createElement("thead");
