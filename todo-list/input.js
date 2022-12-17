@@ -14,7 +14,7 @@ export class Input {
         e.preventDefault();
         this.value = e.target.value;
         this.inputElement.value = "";
-        onSuccess(this.value);
+        onSuccess?.(this.value);
       }
     });
   }
