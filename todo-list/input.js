@@ -1,11 +1,15 @@
-import { getElementFromHtml } from "./utils.js";
+import { debouncedSearch, getElementFromHtml } from "./utils.js";
 
 export class Input {
-  constructor(onSuccess) {
+  constructor(onSuccess, placeholder) {
     this.value = "";
-    const inputHTML = `<input type="text" id="input"></input>`;
+    const inputHTML = `<input type="text" class="input__text" placeholder="${placeholder}" id="input"></input>`;
     this.inputElement = getElementFromHtml(inputHTML);
     this.addSubmitEvent(onSuccess);
+    if (placeholder.match(/search/i)) {
+      this.searchWithDelay = debouncedSearch(onSuccess, 1000);
+      this.addInputEvent();
+    }
   }
 
   addSubmitEvent(onSuccess) {
@@ -16,6 +20,13 @@ export class Input {
         this.inputElement.value = "";
         onSuccess?.(this.value);
       }
+    });
+  }
+
+  addInputEvent() {
+    this.inputElement.addEventListener("input", (e) => {
+      e.preventDefault();
+      this.searchWithDelay(e.target.value);
     });
   }
 }

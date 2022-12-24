@@ -5,3 +5,8 @@
 .hide__item {
   display: none;
 }
+
+.input__text {
+  display: block;
+  margin: 2rem;
+}
