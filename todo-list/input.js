@@ -7,7 +7,7 @@ export class Input {
     this.inputElement = getElementFromHtml(inputHTML);
     this.addSubmitEvent(onSuccess);
     if (placeholder.match(/search/i)) {
-      this.searchWithDelay = debouncedSearch(onSuccess, 1000);
+      this.searchWithDelay = debouncedSearch(onSuccess, 500);
       this.addInputEvent();
     }
   }
