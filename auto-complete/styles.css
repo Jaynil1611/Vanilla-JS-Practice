@@ -1,0 +1,32 @@
+datalist {
+  position: absolute;
+  top: 20;
+  left: 0;
+  max-height: 20rem;
+  border: 0 none;
+  overflow-x: scroll;
+  overflow-y: auto;
+}
+
+datalist option {
+  font-size: 1rem;
+  padding: 0.3em 1em;
+  background-color: #000;
+  color: white;
+  cursor: pointer;
+}
+
+/* option active styles */
+datalist option:hover,
+datalist option:focus {
+  color: #fff;
+  background-color: #036;
+  outline: 0 none;
+}
+
+#search-input option {
+  font-size: 1.8em;
+  padding: 0.3em 1em;
+  background-color: #ccc;
+  cursor: pointer;
+}

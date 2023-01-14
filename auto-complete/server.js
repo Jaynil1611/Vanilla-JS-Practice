@@ -1,13 +1,16 @@
 async function searchProducts(searchQuery) {
-  const url = searchQuery
-    ? `https://dummyjson.com/products/search?q=${searchQuery}&limit=5`
-    : "https://dummyjson.com/products?limit=5";
+  if (!searchQuery) return [];
+  const url = `https://newsapi.org/v2/everything?q=${searchQuery}&apiKey=435aa7f22d714658a0e45c1609c5e0dd&pageSize=10&language=en&searchIn=title`;
+  // : "https://newsapi.org/v2/top-headlines?country=in&apiKey=435aa7f22d714658a0e45c1609c5e0dd&pageSize=10&country=in";
   let response = await fetch(url);
   response = await response.json();
-  if (response.products.length > 0) {
-    return response.products.map(({ id, title }) => ({ id, title }));
+  if (response.articles.length > 0) {
+    return response.articles.map(({ source, title }) => ({
+      id: source?.id,
+      title,
+    }));
   }
-  return response.products;
+  return response.articles;
 }
 
 export function debouncedSearchProducts(onSuccess, delay) {
