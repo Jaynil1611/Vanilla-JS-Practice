@@ -1,4 +1,3 @@
-import { debouncedSearchProducts } from "./server.js";
 import { getElementFromHtml } from "./utils.js";
 
 /*
@@ -20,47 +19,17 @@ After migrating to unordered list, complete following tasks.
 */
 
 export class Input {
-  constructor() {
-    const inputHtml = `<input type="text" id="search-input" placeholder="Search here" list="autocomplete-options" autocomplete="on" />`;
+  constructor(searchFunction) {
+    const inputHtml = `<div class="input__suggestion"><input type="text" id="search-input" placeholder="Search here" autocomplete="on" /><span id="autocomplete-suggestion"></span></div>`;
     this.inputElement = getElementFromHtml(inputHtml);
     this.handleInputChange();
-    this.onFocus();
-    const constructProductsDataList = this.constructProductsDataList.bind(this);
-    const dataListHtml = `<datalist id="autocomplete-options"></datalist>`;
-    this.dataListElement = getElementFromHtml(dataListHtml);
-    this.inputElement.append(this.dataListElement);
-    this.searchWithDelay = debouncedSearchProducts(
-      constructProductsDataList,
-      1000
-    );
-  }
-
-  constructProductsDataList(products) {
-    console.log({ products });
-    if (!this.inputElement.value) {
-      this.dataListElement.innerHTML = "";
-      this.dataListElement.style.display = "none";
-      return;
-    }
-    if (products.length > 0) {
-      let optionHtml = "";
-      products.forEach(({ title }) => {
-        optionHtml += `<option value="${title}"></option>`;
-      });
-      this.dataListElement.innerHTML = optionHtml;
-    }
+    this.searchWithDelay = searchFunction;
   }
 
   handleInputChange() {
     this.inputElement.addEventListener("input", (e) => {
       const value = e.target.value;
       this.searchWithDelay(value);
-    });
-  }
-
-  onFocus() {
-    this.inputElement.addEventListener("focus", () => {
-      // this.searchWithDelay();
     });
   }
 }

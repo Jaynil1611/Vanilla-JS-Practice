@@ -1,6 +1,10 @@
 import { Input } from "./input.js";
+import { List } from "./list.js";
 
-const searchSection = document.querySelector("#search-section");
-const newInputInstance = new Input();
+const searchSection = document.querySelector(".search__input-options");
 
-searchSection.append(newInputInstance.inputElement);
+const newListInstance = new List();
+const newInputInstance = new Input(newListInstance.searchWithDelay);
+
+searchSection.appendChild(newInputInstance.inputElement);
+searchSection.appendChild(newListInstance.dataListElement);
