@@ -1,0 +1,52 @@
+* {
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+.task__board {
+  display: flex;
+  background: #009578;
+  width: 720px;
+  padding: 1rem;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.task__column {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.task__column-items {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 1rem 0;
+  padding: 0;
+}
+
+.task__column-input {
+  /* flex: 1; */
+  padding: 0.5rem;
+  background: white;
+  border: 1px solid green;
+  border-radius: 4px;
+}
+
+.task__column-add-item {
+  padding: 0.5rem;
+  text-align: center;
+  background: #009578;
+  background: rgba(0, 0, 0, 0.1);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  color: white;
+}
+
+.task__column-heading {
+  color: white;
+}
