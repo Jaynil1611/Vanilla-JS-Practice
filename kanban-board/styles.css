@@ -28,7 +28,7 @@
   padding: 0;
 }
 
-.task__column-input {
+.task__item-input {
   /* flex: 1; */
   padding: 0.5rem;
   background: white;
@@ -49,4 +49,14 @@
 
 .task__column-heading {
   color: white;
+}
+
+.task__dropzone {
+  height: 10px;
+  transition: background 0.15s height 0.15s;
+}
+
+.task__dropzone--active {
+  height: 20px;
+  background: rgba(0, 0, 0, 0.25);
 }

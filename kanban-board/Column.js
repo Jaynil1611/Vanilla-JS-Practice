@@ -1,3 +1,4 @@
+import { DropZone } from "./DropZone.js";
 import { Item } from "./Item.js";
 import { KanbanAPI } from "./KanbanAPI.js";
 
@@ -15,6 +16,8 @@ export class Column {
     this.elements.addItem = this.elements.root.querySelector(
       ".task__column-add-item"
     );
+    const topDropZone = new DropZone(id);
+    this.elements.items.appendChild(topDropZone.elements.root);
     this.elements.root.dataset.id = id;
     this.elements.title.textContent = title;
 
@@ -25,6 +28,7 @@ export class Column {
   static createRoot() {
     const range = document.createRange();
 
+    // do deep dive in range & it's properties
     range.selectNode(document.body);
 
     return range.createContextualFragment(`

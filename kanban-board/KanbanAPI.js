@@ -1,3 +1,4 @@
+// optimize read from localStorage
 export class KanbanAPI {
   constructor() {}
 
@@ -50,6 +51,33 @@ export class KanbanAPI {
         return {
           ...column,
           items: column.items?.filter((item) => item.id !== itemId),
+        };
+      }
+      return column;
+    });
+    saveData(updatedTasks);
+  };
+
+  static updateTaskPosition = (columnId, itemId, position) => {
+    const tasks = readData();
+    let item = null;
+    let updatedTasks = tasks?.map((column) => {
+      const existingItem = column.items?.find((item) => item.id === itemId);
+      if (existingItem) item = existingItem;
+      const updatedColumn = item
+        ? {
+            ...column,
+            items: column.items?.filter((item) => item.id != itemId),
+          }
+        : column;
+      return updatedColumn;
+    });
+    updatedTasks = updatedTasks.map((column) => {
+      if (column.id === columnId && item) {
+        column.items.splice(position, 0, item);
+        return {
+          ...column,
+          items: column.items.slice(),
         };
       }
       return column;
