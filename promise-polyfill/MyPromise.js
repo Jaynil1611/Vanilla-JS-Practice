@@ -1,67 +1,73 @@
 // TODO: Add validations in each promise method for accepting any argument
 
 class MyPromise {
-  constructor(resolver) {
-    this.resolvedData = null;
-    this.rejectedError = null;
-    this.isResolved = false;
-    this.isRejected = false;
-    this.resolvedChain = [];
-    this.rejectedChain = [];
+  constructor(executor) {
+    this._state = "pending";
+    this._callbacks = [];
 
-    this.resolve = this.resolve.bind(this);
-    this.reject = this.reject.bind(this);
-    this.then = this.then.bind(this);
-    this.catch = this.catch.bind(this);
-
-    resolver(this.resolve, this.reject);
-  }
-
-  resolve(value) {
-    this.resolvedData = value;
-    this.isResolved = true;
-
-    if (this.resolvedChain.length) {
-      this.resolvedChain.reduce((res, func) => func(res), this.resolvedData);
+    try {
+      executor(this._resolve.bind(this), this._reject.bind(this));
+    } catch (error) {
+      this._reject(error);
     }
   }
 
-  reject(error) {
-    this.rejectedError = error;
-    this.isRejected = true;
-
-    if (this.rejectedChain.length) {
-      this.rejectedChain.forEach((func) => func(error));
-    }
+  _resolve(value) {
+    if (this._state !== "pending") return;
+    this._result = value;
+    this._state = "fulfilled";
+    this._handleSettled("onFulfilled");
   }
 
-  then(successCallback) {
-    this.resolvedChain.push(successCallback);
-    if (this.isResolved) {
-      this.resolvedChain.reduce((res, func) => func(res), this.resolvedData);
-    }
-    return this;
+  _reject(error) {
+    if (this._state !== "pending") return;
+    this._result = error;
+    this._state = "rejected";
+    this._handleSettled("onRejected");
   }
 
-  catch(errorCallback) {
-    this.rejectedChain.push(errorCallback);
-    if (this.isRejected) {
-      this.rejectedChain.forEach((func) => func(this.rejectedError));
-    }
-    return this;
+  _handleSettled(onSettled) {
+    queueMicrotask(() => {
+      for (const cb of this._callbacks) {
+        try {
+          const result = cb[onSettled](this._result);
+          cb.resolve(result);
+        } catch (err) {
+          cb.reject(err);
+        }
+      }
+    });
   }
 
-  finally(callback) {
-    this.resolvedChain.push(callback);
-    this.rejectedChain.push(callback);
+  then(onFulfilled, onRejected) {
+    return new MyPromise((resolve, reject) => {
+      this._callbacks.push({
+        onFulfilled: onFulfilled ?? ((value) => value),
+        onRejected:
+          onRejected ??
+          ((err) => {
+            throw err;
+          }),
+        resolve,
+        reject,
+      });
+    });
+  }
+
+  catch(onRejected) {
+    return this.then(null, onRejected);
+  }
+
+  finally(onFinally) {
+    return this.then(onFinally, onFinally);
   }
 
   static resolve(value) {
     return new MyPromise((resolve) => resolve(value));
   }
 
-  static reject(error) {
-    return new MyPromise((_, reject) => reject(error));
+  static reject(value) {
+    return new MyPromise((_, reject) => reject(value));
   }
 
   static all(promises) {
