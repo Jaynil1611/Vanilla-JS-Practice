@@ -15,12 +15,13 @@
   border: 1px solid #f0f0f0;
 }
 
-.GridItemEven , .GridItemOdd {
+.loader {
+  background-color: black;
+  color: white;
+  font-size: 20px;
+  font-weight: 700;
   display: flex;
-  justify-content: center;
   align-items: center;
-}
-
-.GridItemEven {
-  background-color: cyan;
+  justify-content: center;
+  border: 1px solid white;
 }
