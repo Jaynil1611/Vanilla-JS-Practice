@@ -1,0 +1,30 @@
+.cell {
+  padding: 8px 12px;
+  margin: 8px;
+}
+
+.calendar {
+  margin: auto;
+  width: 500px;
+  height: 500px;
+  border: 1px solid black;
+}
+
+.row {
+  display: grid;
+  column-gap: 16px;
+  row-gap: 8px;
+  grid-template-columns: repeat(7, 1fr);    
+  cursor: pointer;
+}
+
+.sunday {
+  color: red;
+}
+
+.cell--selected {
+  border: 1px solid cyan;
+  border-radius: 50%;
+  color: white;
+  background-color: black;  
+}
