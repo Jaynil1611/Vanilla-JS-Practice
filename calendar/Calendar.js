@@ -99,7 +99,7 @@ export class Calendar {
       const todayDate = new Date().getDate();
 
       const todayDateCell = document.querySelector(
-        `div[data-date="${todayDate}"]`
+        `span[data-date="${todayDate}"]`
       );
       todayDateCell.click();
     });
