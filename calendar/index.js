@@ -1,7 +1,7 @@
-import { Month } from "./Month.js";
+import { Calendar } from "./Calendar.js";
 
 const calendar = document.querySelector("#calendar");
 
-const month = new Month(5, 2023);
+const calendarUI = new Calendar(calendar);
 
-calendar.appendChild(month.monthElement);
+// calendar.appendChild(calendarUI.calendarElement);

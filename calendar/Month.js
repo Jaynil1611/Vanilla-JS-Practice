@@ -1,18 +1,19 @@
 import { dayNames } from "./data.js";
-import { getDayOfMonth, getDaysCount } from "./utils.js";
+import { getDayOfMonth, getDaysCount, getElementFromHtml } from "./utils.js";
 
 export class Month {
-  constructor(currentMonth, currentYear) {
+  constructor(currentMonth, currentYear, root) {
     this.currentMonth = currentMonth;
     this.currentYear = currentYear;
+    this.rootElement = root;
     this.monthElement = document.createElement("div");
     this.maxRowCount = 6;
     this.maxColumnCount = 7;
     this.currentDate = null;
     this.selectedCell = null;
 
-    this.renderMonthUI();
-    this.handleDateClick();
+    this.renderMonthUI(this.currentMonth, this.currentYear);
+    this.rootElement.append(this.monthElement);
   }
 
   handleDateClick() {
@@ -29,61 +30,60 @@ export class Month {
   }
 
   renderColumnCell(value, isSunday) {
-    const cell = document.createElement("div");
-    cell.classList.add("cell");
-    cell.textContent = value ? `${value}` : "";
+    let className = `cell`;
+    if (isSunday) className += " sunday";
+    let cellHtml = `<span class="${className}" data-date="${value}">${
+      value ? value : ""
+    }</span>`;
 
-    if (isSunday) cell.classList.add("sunday");
-    return cell;
+    return cellHtml;
   }
 
   renderDayNames() {
-    const dayName = document.createElement("div");
-    const dayNameFragment = document.createDocumentFragment();
-    dayName.classList.add("row");
+    let dayNameHtml = "";
 
     for (let i = 0; i < this.maxColumnCount; i++) {
-      dayNameFragment.append(this.renderColumnCell(dayNames[i]));
+      dayNameHtml += `<span class="day-names">${this.renderColumnCell(dayNames[i])}</span>`;
     }
 
-    dayName.appendChild(dayNameFragment);
-    this.monthElement.append(dayName);
+    return dayNameHtml;
   }
 
-  renderMonthUI() {
-    const maxDaysCount = getDaysCount(this.currentMonth, this.currentYear);
-    const startDayIndex = getDayOfMonth(this.currentMonth, this.currentYear);
-    const monthFragment = document.createDocumentFragment();
-    this.renderDayNames();
+  renderMonthUI(currentMonth, currentYear) {
+    let monthHtml = "";
+
+    const maxDaysCount = getDaysCount(currentMonth, currentYear);
+    const startDayIndex = getDayOfMonth(currentMonth, currentYear);
+    monthHtml += this.renderDayNames();
 
     // Appending day values
     let dayCount = 0;
     for (let i = 0; i < this.maxRowCount; i++) {
       if (dayCount === maxDaysCount) break;
 
-      const rowFragment = document.createDocumentFragment();
-      const row = document.createElement("div");
-      row.classList.add("row");
+      let rowHtml = "";
 
       for (let j = 0; j < this.maxColumnCount; j++) {
         let isSunday = false;
         if (i === 0 && j < startDayIndex) {
-          rowFragment.append(this.renderColumnCell());
+          rowHtml += this.renderColumnCell();
           continue;
         }
 
         if (j === 0) isSunday = true;
 
         dayCount++;
-        rowFragment.append(this.renderColumnCell(dayCount, isSunday));
+        rowHtml += this.renderColumnCell(dayCount, isSunday);
 
         if (dayCount === maxDaysCount) break;
       }
 
-      row.appendChild(rowFragment);
-      monthFragment.append(row);
+      monthHtml += rowHtml;
     }
 
-    this.monthElement.appendChild(monthFragment);
+    const monthContainerHtml = `<div class="grid">${monthHtml}</div>`;
+    this.monthElement.innerHTML = monthContainerHtml;
+
+    this.handleDateClick();
   }
 }
