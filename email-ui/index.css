@@ -1,0 +1,9 @@
+.main-app {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(3, 1fr);
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
