@@ -1,0 +1,45 @@
+.main-app {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 25% 25% 50%;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.mail-list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 16px;
+  margin: 4px;
+}
+
+.mail-list__item {
+  display: flex;
+  flex-direction: column;  
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid cyan;
+}
+
+.mail-list__item--header {
+  font-size: 1.5rem;
+  font-weight: bold;
+  line-height: 20px;
+  padding: 8px 0;
+  letter-spacing: 0.5px;
+}
+
+.mail-list__item--content {  
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  font-size: 14px;  
+  opacity: 0.8;  
+  width: 100%;
+  padding: 8px 0;
+  color: gray;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
