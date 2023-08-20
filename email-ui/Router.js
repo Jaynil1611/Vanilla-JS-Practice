@@ -16,7 +16,6 @@ const routes = [
 const matchPathName = (path) => {
   if (path && path.includes("mails")) {
     const result = path.split("/");
-    console.log({ result });
     return result.length === 3;
   }
   return path === location.pathname;
