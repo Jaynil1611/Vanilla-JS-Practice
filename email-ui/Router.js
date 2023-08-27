@@ -3,13 +3,13 @@ import { MailList } from "./MailList.js";
 const routes = [
   {
     path: "/",
-    view: () => new MailList("inbox"),
+    view: (root) => new MailList(root, "inbox"),
   },
-  { path: "/important", view: () => new MailList("important") },
-  { path: "/sent", view: () => new MailList("sent") },
+  { path: "/important", view: (root) => new MailList(root, "important") },
+  { path: "/sent", view: (root) => new MailList(root, "sent") },
   {
     path: "/mails/mail_csfsdfsdf",
-    view: () => "mail content",
+    view: (root) => "mail content",
   },
 ];
 
@@ -35,7 +35,9 @@ export const router = async () => {
     match = { route: routes[0], isMatch: true };
   }
 
-  match.route.view();
+  const root = document.querySelector(".main-app");
+
+  match.route.view(root);
   // document.querySelector("#mail_list").innerHTML = view;
 };
 

@@ -9,10 +9,6 @@ export class MailContent {
   renderMailContent() {
     const mailContent = MailAPI.getMailById(this.itemId);
     if (mailContent) {
-      // let tagListHtml = `<list`;
-      // mailContent.tags?.forEach((tag) => {
-      //   tagListHtml += ``;
-      // });
       const mailHtml = `
       <article class="mail-content__container">
         <h2>${mailContent.title}</h2>
