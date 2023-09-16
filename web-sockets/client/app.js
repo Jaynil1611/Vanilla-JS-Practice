@@ -35,11 +35,7 @@ export class App {
   handleSocketConnection() {
     const socket = new WebSocket("ws://localhost:8001");
 
-    socket.addEventListener("open", (message) => {
-      // const { type, data: userData } = JSON.parse(message.data);
-      // if (type === messageTypes.CONTENT_CHANGE) {
-      //   this.documentInstance.updateEditorContent(userData);
-      // }
+    socket.addEventListener("open", () => {
       console.log("Client opened a new connection");
 
       socket.send(
