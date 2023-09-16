@@ -28,15 +28,27 @@ webSocketServer.on("connection", (ws) => {
     const { type, data } = JSON.parse(message);
     if (type === messageTypes.CONTENT_CHANGE) {
       contentValue = data;
+      sendMessageToAllClients({ type, data: contentValue });
     } else if (type === messageTypes.USER_EVENT) {
       // TODO: update user activity
-      users[userId] = data;
+      users[userId] = { userName: data };
+      sendMessageToAllClients({ type, data: users });
     }
-    // TODO: send user activity to all clients
-    sendMessageToAllClients({ users });
   });
 
   ws.on("close", () => {
-    ws.send("Bye client");
+    delete clients[userId];
+    delete users[userId];
+    sendMessageToAllClients({ type: messageTypes.USER_EVENT, data: users });
   });
+
+  ws.send(
+    JSON.stringify({ type: messageTypes.CONTENT_CHANGE, data: contentValue })
+  );
 });
+
+/*
+** user : {
+  [293492034]: username
+}
+*/
