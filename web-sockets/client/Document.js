@@ -32,7 +32,7 @@ export class Document {
   }
 
   handleEditorChange = (socketInstance) => {
-    this.editorElement.addEventListener("change", (e) => {
+    this.editorElement.addEventListener("input", (e) => {
       socketInstance.send(
         JSON.stringify({ type: messageTypes.CONTENT_CHANGE, data: e.target.value })
       );

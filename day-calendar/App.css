@@ -1,0 +1,30 @@
+.calendar__container {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding: 1rem;
+  margin: 1rem;
+}
+
+.hour__container {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.event__container {
+  width: 100%;
+  flex: 1;
+}
+
+.divider {
+  opacity: 0.8;
+  width: 100%;
+  height: 2px;
+  background-color: lightgray;
+}
+
+.event__time {
+  min-width: 80px;
+  text-align: right;
+}
