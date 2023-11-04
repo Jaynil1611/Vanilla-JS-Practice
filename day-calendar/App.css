@@ -1,15 +1,24 @@
+* {
+  box-sizing: border-box;
+}
+
+.day__calendar {
+  position: relative;
+  margin: 1rem;
+  /* width: 100%; */
+}
+
 .calendar__container {
   display: flex;
   flex-direction: column;
-  gap: 40px;
-  padding: 1rem;
-  margin: 1rem;
+  /* gap: 40px; */
 }
 
 .hour__container {
   display: flex;
   gap: 1rem;
-  align-items: center;
+  height: 60px;
+  /* align-items: center; */
 }
 
 .event__container {

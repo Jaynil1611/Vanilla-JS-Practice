@@ -23,6 +23,7 @@ export class Layout {
 
       const taskContainer = document.createElement("div");
       taskContainer.classList.add("event__container");
+      taskContainer.dataset.hour = index
       taskContainer.appendChild(divider);
 
       hourContainer.appendChild(hourElement);
