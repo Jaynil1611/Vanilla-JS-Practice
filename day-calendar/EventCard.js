@@ -2,7 +2,9 @@ export class EventCard {
   constructor(taskData) {
     this.taskData = taskData;
     this.queue = [];
-    this.eventContainerList = document.querySelectorAll(".event__container");
+    this.eventContainerList = Array.from(
+      document.querySelectorAll(".event__container")
+    );
 
     this.sortTaskData();
     this.renderDayEvents();
@@ -11,25 +13,70 @@ export class EventCard {
   transformData() {}
 
   findEventContainer(startHour) {
-    return Array.from(this.eventContainerList).find(
+    return this.eventContainerList.find(
       (event) => Number(event.dataset.hour) === startHour
     );
   }
 
+  getEventOverlap({ startHour, startMin, endHour, endMin }) {
+    let deleteCount = 0;
+    for (let i = 0; i < this.queue.length; i++) {
+      const { endHour: endHours, endMin: endMinute } = this.queue[i];
+      if (
+        endHours < startHour ||
+        (endHours === startHour && startMin > endMinute)
+      ) {
+        deleteCount++;
+      }
+    }
+
+    this.queue.splice(0, deleteCount, { startHour, startMin, endHour, endMin });
+    return this.queue.length;
+  }
+
+  getStringPadding(value) {
+    return value.toString().padStart(2, "0");
+  }
+
+  // shift to utils file
+  getLocaleTime(value) {
+    return this.getStringPadding(value > 12 ? value % 12 : value);
+  }
+
+  getEventFormattedTime({ startHour, startMin, endHour, endMin }) {
+    const meridian = startHour > 11 ? "PM" : "AM";
+    return `${this.getLocaleTime(startHour)}:${this.getStringPadding(
+      startMin
+    )} ${meridian} - ${this.getLocaleTime(endHour)}:${this.getStringPadding(
+      endMin
+    )} ${meridian}`;
+  }
+
   renderDayEvents() {
-    this.taskData.forEach(({ startHour, startMin, endHour, endMin }) => {
+    this.taskData.forEach(({ startHour, startMin, endHour, endMin, color }) => {
       const eventContainer = this.findEventContainer(startHour);
       const eventCard = document.createElement("div");
-      console.log(eventContainer.dataset.hour);
       const top = (startHour + startMin / 60) * 60;
       const height = (endHour - startHour + (endMin - startMin) / 60) * 60;
-      console.log(top, height, startHour, startMin, endHour, endMin);
 
+      const overlaps = this.getEventOverlap({
+        startHour,
+        startMin,
+        endHour,
+        endMin,
+      });
+
+      eventCard.classList.add("event__card");
       eventCard.style.top = `${top}px`;
-      eventCard.style.position = "absolute";
-      eventCard.style.width = "90%";
       eventCard.style.height = `${height}px`;
-      eventCard.style.backgroundColor = "cyan";
+      eventCard.style.width = `${Math.floor(93.5 / overlaps)}%`;
+      eventCard.style.backgroundColor = color;
+      eventCard.textContent = this.getEventFormattedTime({
+        startHour,
+        startMin,
+        endHour,
+        endMin,
+      });
 
       eventContainer.appendChild(eventCard);
     });
@@ -61,7 +108,8 @@ export class EventCard {
         return -1;
       }
       if (a.startHour === b.startHour) {
-        return a.endMin - b.endMin;
+        console.log(a, b);
+        return a.startMin - b.startMin;
       }
       return 1;
     });
